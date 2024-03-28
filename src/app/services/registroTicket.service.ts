@@ -7,7 +7,7 @@ import { RegistroTicket } from '../models/registroTicket';
   providedIn: 'root'
 })
 export class RegistroTicketService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/registroTicket';
+  private apiUrl = 'https://gmservidor.onrender.com/api/registroTicket';
 
   constructor(private http: HttpClient) { }
 

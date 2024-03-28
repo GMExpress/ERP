@@ -7,7 +7,7 @@ import { RegistroPerdida } from '../models/registroPerdida';
   providedIn: 'root'
 })
 export class RegistroPerdidaService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/registroPerdida';
+  private apiUrl = 'https://gmservidor.onrender.com/api/registroPerdida';
 
   constructor(private http: HttpClient) { }
 

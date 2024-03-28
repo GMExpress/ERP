@@ -7,7 +7,7 @@ import { UsoTicket } from '../models/usoTicket';
   providedIn: 'root'
 })
 export class UsoTicketService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/usoTicket';
+  private apiUrl = 'https://gmservidor.onrender.com/api/usoTicket';
 
   constructor(private http: HttpClient) { }
 

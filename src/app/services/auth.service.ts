@@ -8,7 +8,7 @@ import { RespuestaAuth } from '../models/respuesta-auth';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/usuario';
+  private apiUrl = 'https://gmservidor.onrender.com/api/usuario';
 
   constructor(private http: HttpClient) { }
 

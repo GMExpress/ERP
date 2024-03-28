@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class MantencionService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/mantencion';
+  private apiUrl = 'https://gmservidor.onrender.com/api/mantencion';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

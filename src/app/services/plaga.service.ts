@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PlagaService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/plaga';
+  private apiUrl = 'https://gmservidor.onrender.com/api/plaga';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

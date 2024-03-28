@@ -7,7 +7,7 @@ import { Empresa } from '../models/empresa';
   providedIn: 'root'
 })
 export class EmpresaService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/empresa';
+  private apiUrl = 'https://gmservidor.onrender.com/api/empresa';
 
   constructor(private http: HttpClient) { }
 

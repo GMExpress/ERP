@@ -7,7 +7,7 @@ import { Prestamo } from '../models/prestamo';
   providedIn: 'root'
 })
 export class PrestamoService {
-  private apiUrl = 'https://gmexpress.onrender.com/api/prestamos'; 
+  private apiUrl = 'https://gmservidor.onrender.com/api/prestamos'; 
 
   constructor(private http: HttpClient) { }
 
