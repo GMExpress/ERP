@@ -1,0 +1,170 @@
+<app-layout>
+  <div class="container mt-5">
+    <h2>Listado de Asistencias</h2>
+    <!-- Sección de Filtros -->
+    <div class="mb-3">
+      <form [formGroup]="filtroForm">
+        <div class="row align-items-center">
+          <!-- Filtro por Fecha -->
+          <div class="col-md-3">
+            <label for="fecha" class="col-form-label">Fecha:</label>
+            <input type="month" id="fecha" class="form-control" formControlName="fecha">
+          </div>
+          <!-- Filtro por Trabajador -->
+          <div class="col-md-3">
+            <label for="trabajador" class="col-form-label">Trabajador:</label>
+            <select id="trabajador" class="form-select" formControlName="trabajador">
+              <option value="" disabled>Seleccionar trabajador</option>
+              <option *ngFor="let trabajador of trabajadores" [ngValue]="trabajador.nombre">{{ trabajador.nombre }}</option>
+            </select>
+          </div>        
+          <!-- Botón de Añadir Asistencia Mensual -->
+          <div class="col text-end">
+            <button class="btn btn-primary" routerLink="/crear-asistencia">Añadir asistencia mensual</button>
+            <button class="btn btn-primary" (click)="exportarTablaAExcel()" [disabled]="!filtroForm.valid">Exportar a Excel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Tabla de Asistencias -->
+    <div class="table-responsive">
+      <table class="table table-striped table-rounded">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Trabajador</th>
+            <th>Fecha</th>
+            <th class="hora-columna">Hora de Entrada</th>
+            <th class="hora-columna">Hora de Salida</th>
+            <th class="hora-columna">Hora de Entrada Real</th>
+            <th class="hora-columna">Hora de Salida Real</th>
+            <th class="hora-columna">Diferencia (minutos)</th>
+            <th class="hora-columna">Total Horas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let asistencia of asistenciasFiltradas; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <ng-container *ngIf="esObjetoTrabajador(asistencia.trabajador); else nombreString">
+                {{ asistencia.trabajador.nombre }}
+              </ng-container>
+              <ng-template #nombreString>{{ asistencia.trabajador }}</ng-template>
+            </td>
+            <td>{{ dateFormatService.formatDate(asistencia.dia) }}</td>
+            <td>
+              <select class="form-control" [(ngModel)]="asistencia.horaEntrada" (change)="cambiarHorarioEntrada(asistencia._id!, asistencia.horaEntrada!)">
+                <option value="" disabled selected>Cambiar Horario de Entrada</option>
+                <option *ngFor="let hora of horasOpciones" [value]="hora">{{ hora }}</option>
+              </select>
+            </td>
+            <td>
+              <select class="form-control" [(ngModel)]="asistencia.horaSalida" (change)="cambiarHorarioSalida(asistencia._id!, asistencia.horaSalida!)">
+                <option value="" disabled selected>Cambiar Horario de Salida</option>
+                <option *ngFor="let hora of horasOpciones" [value]="hora">{{ hora }}</option>
+              </select>
+            </td>
+            <td>
+              <input type="time" class="form-control"
+                [(ngModel)]="asistencia.entradaReal"
+                (change)="cambiarHorarioEntradaReal(asistencia._id!, asistencia.entradaReal!)">
+            </td>
+            <td>
+              <input type="time" class="form-control"
+                [(ngModel)]="asistencia.salidaReal"
+                (change)="cambiarHorarioSalidaReal(asistencia._id!, asistencia.salidaReal!)">
+            </td>
+            <td>{{ asistencia.diferencia }}</td>
+            <td>{{ asistencia.horasTotales }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-primary" (click)="horasExtras(asistencia._id!)">Horas Extra</button>
+              <button class="btn btn-primary" (click)="permisos(asistencia._id!)">Permisos</button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7">Totales del Mes</td>
+            <td>{{ totalDiferenciaMes }}</td>
+            <td>{{ totalHorasMes }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="informacion-adicional mt-4">
+      <h3>Información adicional:</h3>
+      <table class="table table-bordered table-rounded">
+        <tbody>
+          <tr>
+            <th>Días trabajados:</th>
+            <td>{{ contarDiasTrabajados(asistenciasFiltradas) }}</td>
+          </tr>
+          <tr>
+            <th>Días que llega atrasado (>5 min):</th>
+            <td>{{ contarDiasConRetraso(asistenciasFiltradas, 5) }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Días con horas extras de entrada:</th>
+            <td colspan="2">
+              <ul>
+                <li *ngFor="let diaExtra of diasConHorasExtrasDiurnas; let i = index" class="list-item">
+                  Día : {{ diaExtra.dia }} | Horas extra trabajadas : {{ diaExtra.horas }}
+                  <button class="btn-eliminar" (click)="eliminarHoraExtra('diurno', diaExtra._id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th>Días con horas extras de salida:</th>
+            <td colspan="2">
+              <ul>
+                <li *ngFor="let diaExtra of diasConHorasExtrasTardias; let i = index" class="list-item">
+                  Día : {{ diaExtra.dia }} | Horas extra trabajadas : {{ diaExtra.horas }}
+                  <button class="btn-eliminar" (click)="eliminarHoraExtra('tardio', diaExtra._id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </li>
+              </ul>
+            </td>            
+          </tr>
+          <tr>
+            <th>Días con permisos de entrada:</th>
+            <td colspan="2">
+              <ul>
+                <li *ngFor="let diaPermiso of diasConPermisoDiurno; let i = index" class="list-item">
+                  Día : {{ diaPermiso.dia }} | Horas de permiso : {{ diaPermiso.horas }}
+                  <button class="btn-eliminar" (click)="eliminarPermiso('diurno', diaPermiso._id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th>Días con permisos de salida:</th>
+            <td colspan="2">
+              <ul>
+                <li *ngFor="let diaPermiso of diasConPermisoTardio; let i = index" class="list-item">
+                  Día : {{ diaPermiso.dia }} | Horas de permiso : {{ diaPermiso.horas }}
+                  <button class="btn-eliminar" (click)="eliminarPermiso('tardio', diaPermiso._id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </li>
+              </ul>
+            </td>            
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="col-md-4 text-end">
+      <button class="btn btn-primary btn-volver" routerLink="/recursos-humanos">Volver</button>
+    </div>
+  </div>
+</app-layout>

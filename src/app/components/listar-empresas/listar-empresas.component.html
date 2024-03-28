@@ -1,0 +1,98 @@
+<app-layout>
+<div class="container mt-5">
+    <!-- Sección de Filtros -->
+    <div class="mb-3">
+        <form [formGroup]="filtroForm">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+            <label for="vigente" class="col-form-label">Vigente:</label>
+            <select id="vigente" class="form-select" formControlName="vigente">
+                <option value="">Todos</option>
+                <option value="Si">Sí</option>
+                <option value="No">No</option>
+            </select>
+            </div>
+            <div class="col-auto">
+            <label for="ordenCompra" class="col-form-label">Orden de Compra:</label>
+            <select id="ordenCompra" class="form-select" formControlName="ordenCompra">
+                <option value="">Todos</option>
+                <option value="Si">Sí</option>
+                <option value="No">No</option>
+            </select>
+            </div>
+            <div class="col-auto">
+            <label for="sucursal" class="col-form-label">Sucursal:</label>
+            <select id="sucursal" class="form-select" formControlName="sucursal">
+                <option value="">Todos</option>
+                <option value="Central">Central</option>
+                <option value="Megacentro">Megacentro</option>
+                <option value="Faremin">Faremin</option>
+                <option value="Ovalle">Ovalle</option>
+            </select>
+            </div>
+        </div>
+        </form>
+    </div>
+    <h2>Listado de Empresas</h2>
+    <div class="text-end mb-3">
+      <button class="btn btn-primary" routerLink="/crear-empresa">Agregar Empresa</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-rounded">
+            <thead>
+            <tr>
+                <th>#</th>
+                    <th>Nombre</th>
+                    <th>RUT</th>
+                    <th>Vigente</th>
+                    <th>Orden de Compra</th>
+                    <th>Color Fondo Asignado</th>
+                    <th>Color Letra Asignado</th>
+                    <th>Valor Neto</th>
+                    <th>Servicio Negociado</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Contenedor de Vidrio</th>
+                    <th>Sucursal</th>
+                    <th>Facturación</th>
+                    <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let empresa of empresasFiltradas; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ empresa.nombre }}</td>
+                <td>{{ empresa.rut }}</td>
+                <td>
+                    <select class="form-select" (change)="actualizarEstadoEmpresa(empresa._id!, 'vigente', $event)">
+                        <option [selected]="empresa.vigente === 'Si'" value="Si">Si</option>
+                        <option [selected]="empresa.vigente === 'No'" value="No">No</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select" (change)="actualizarEstadoEmpresa(empresa._id!, 'ordenCompra', $event)">
+                        <option [selected]="empresa.ordenCompra === 'Si'" value="Si">Si</option>
+                        <option [selected]="empresa.ordenCompra === 'No'" value="No">No</option>
+                    </select>
+                </td>
+                <td>{{ empresa.colorFondoAsignado || 'N/A' }}</td>
+                <td>{{ empresa.colorLetraAsignado || 'N/A' }}</td>
+                <td title="Valor anterior: {{empresa.valorAnterior || 'No disponible'}}">{{ empresa.valorNeto }}</td> 
+                <td>{{ empresa.servicioNegociado }}</td>
+                <td>{{ empresa.tipoServicio }}</td>
+                <td>{{ empresa.contenedorVidrio || 'N/A' }}</td>
+                <td>{{ empresa.sucursal }}</td>
+                <td>{{ empresa.facturacion }}</td>
+                <td class="actions-cell">
+                <button class="btn btn-third" (click)="editarEmpresa(empresa._id!)"><i class="fas fa-edit"></i></button>
+                <!-- <button class="btn btn-eliminar" (click)="eliminarEmpresa(empresa._id!)"><i class="fas fa-trash"></i></button> -->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    
+    <div class="btn-volver">
+        <button class="btn btn-primary" routerLink="/administracion-tickets">Volver</button>
+    </div>
+</app-layout>

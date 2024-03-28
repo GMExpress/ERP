@@ -1,0 +1,54 @@
+<app-layout>
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <h2>Listado de Usuarios</h2>
+    </div>
+    <div class="col-md-4 text-end">
+      <button class="btn btn-primary" routerLink="/registrar">AÑADIR USUARIO</button>
+    </div>
+  </div>
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Username</th>
+        <th>Rol Actual</th>
+        <th>Cambiar Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.username }}</td>
+        <td>{{ usuario.rol }}</td>
+        <td>
+          <select class="form-control" (change)="cambiarRol(usuario._id!, $any($event.target).value)">
+            <option value="" disabled selected>Cambiar Rol</option>
+            <option value="Gerente">Gerente</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Nutricionista">Nutricionista</option>
+            <option value="APR">APR</option>
+            <option value="Enc. Logistica">Enc. Logistica</option>
+            <option value="Trabajador">Trabajador</option>
+            <option value="Practicante">Practicante</option>
+          </select>
+        </td>
+        <td>
+          <!-- Botón de editar con margen a la derecha -->
+          <button class="btn btn-primary me-2" (click)="editarUsuario(usuario._id!)">Editar</button>
+          <!-- Botón de eliminar con margen a la izquierda -->
+          <button class="btn btn-danger ms-2" (click)="eliminarUsuario(usuario._id!)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="usuarios.length === 0" class="alert alert-info" role="alert">
+    No hay usuarios registrados.
+  </div>
+  <div class="row">
+    <div class="col text-end mt-3">
+      <button class="btn btn-primary" routerLink="/recursos-humanos">Volver</button>
+    </div>
+  </div>
+</div>
+</app-layout>

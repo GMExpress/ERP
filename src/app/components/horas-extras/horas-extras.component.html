@@ -1,0 +1,44 @@
+<app-layout>
+<div class="container mt-3">
+    <h2>Registro de Horas Extras</h2>
+    <form [formGroup]="horasExtrasForm" (ngSubmit)="onSubmit()">
+      <table class="table table-rounded">
+        <tbody>
+          <tr>
+            <td>
+              <label for="tipoHoraExtra" class="form-label">Tipo de Hora Extra:</label>
+            </td>
+            <td>
+              <select id="tipoHoraExtra" class="form-select" formControlName="esPrevio">
+                <option value="true">Previa a la entrada</option>
+                <option value="false">Posterior a la salida</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="horasExtras" class="form-label">Cantidad de Horas Extras (HH:MM):</label>
+            </td>
+            <td>
+              <select id="horasExtras" class="form-control" formControlName="horasExtras">
+                <option value="" disabled selected>Seleccionar Horas Extras</option>
+                <option *ngFor="let hora of horasOpciones" [ngValue]="hora">{{ hora }}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-center">
+              <button type="submit" class="btn btn-primary" [disabled]="horasExtrasForm.invalid">Guardar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  
+  <div class="col-md-4 text-end">
+    <a class="btn btn-primary btn-volver"
+       [routerLink]="['/listar-asistencias']"
+       [queryParams]="{ trabajador: trabajadorId, fecha: fecha }">Volver</a>
+  </div>
+</app-layout>

@@ -1,0 +1,94 @@
+<div class="auth-container">
+  <h2 class="auth-title">Bienvenido al sistema de gestión de GM Express, {{ nombreUsuario }}</h2>
+  <p class="rol-indicator">Usted tiene rol de {{ rol }}</p>
+
+  <!-- Notificaciones de Contratos Próximos a Vencer -->
+  <div *ngIf="trabajadoresConContratoPr.length > 0" class="notificacion-roja-suave">
+    <h3>Contratos próximos a vencer</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del Trabajador</th>
+          <th>Fecha de Vencimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let trabajador of trabajadoresConContratoPr">
+          <td>
+            <a [routerLink]="['/editar-trabajador', trabajador._id]">{{ trabajador.nombre }}</a>
+          </td>
+          <td>{{ dateFormatService.formatDate(trabajador.fechaTerminoContrato!) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- Notificaciones de Cumpleaños Próximos -->
+  <div *ngIf="trabajadoresConCumplePr.length > 0" class="notificacion-azul-suave">
+    <h3>Cumpleaños próximos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del Trabajador</th>
+          <th>Fecha de Cumpleaños</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let trabajador of trabajadoresConCumplePr">
+          <td>{{ trabajador.nombre }}</td>
+          <td>{{ formatDate(trabajador.fechaNacimiento) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Notificaciones de Contratos Vencidos -->
+  <div *ngIf="trabajadoresContratoVencido.length > 0" class="notificacion-roja-suave">
+    <h3>Contratos Vencidos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del Trabajador</th>
+          <th>Fecha de término del Contrato</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let trabajador of trabajadoresContratoVencido">
+          <td>
+            <a [routerLink]="['/editar-trabajador', trabajador._id]">{{ trabajador.nombre }}</a>
+          </td>
+          <td>{{ formatDate(trabajador.fechaTerminoContrato!) }}</td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>
+
+  <!-- Sección para registrar nuevo usuario -->
+  <div *ngIf="mostrarRecursosHumanos" class="list-group">
+    <a routerLink="/recursos-humanos" class="list-group-item list-group-item-action btn-verde-claro">Recursos Humanos</a>
+  </div>
+
+  <!-- Sección para Administración de Tickets -->
+  <div *ngIf="mostrarAdministracionTickets" class="list-group">
+    <a routerLink="/administracion-tickets" class="list-group-item list-group-item-action btn-oscuro">Administración de Tickets</a>
+  </div>
+
+  <!-- Sección para listar capacitaciones -->
+  <div *ngIf="mostrarListarCapacitaciones" class="list-group">
+    <a routerLink="/listar-capacitacion" class="list-group-item list-group-item-action">R-SGI-44 Programa anual de capacitaciones</a>
+  </div>
+
+  <!-- Sección para listar plagas -->
+  <div *ngIf="mostrarListaPlagas" class="list-group">
+    <a routerLink="/listar-plagas" class="list-group-item list-group-item-action">R-SGI-88 Programa anual de control de plagas</a>
+  </div>
+
+  <!-- Sección para listar mantenciones -->
+  <div *ngIf="mostrarListarMantenciones" class="list-group">
+    <a routerLink="/listar-mantencion" class="list-group-item list-group-item-action">R-SGI-89 Programa anual de mantenciones</a>
+  </div>
+  
+  <!-- Botón de cerrar sesión -->
+  <button (click)="cerrarSesion()" class="btn btn-logout">Cerrar Sesión</button>
+</div>
